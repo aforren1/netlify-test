@@ -5,9 +5,31 @@ const mailgun = require('mailgun-js')({ apiKey: MAILGUN_API_KEY, domain: MAILGUN
 
 const MAILGUN_URL = "https://api.mailgun.net/v3/" + MAILGUN_DOMAIN;
 
+
 exports.handler = function (event, context, callback) {
-    callback(null, {
-        statusCode: 200,
-        body: MAILGUN_DOMAIN,
+    // if (event.httpMethod !== 'POST') {
+    //     return { statusCode: 405, body: 'Method Not Allowed' }
+    // }
+    //const data = JSON.parse(event.body)
+    console.log('Sending email.')
+
+    let data = {
+        from: "Alex 'Mailgun' Forrence <mailgun@" + MAILGUN_DOMAIN + ">",
+        to: "actlab@yale.edu",
+        subject: "Coming to you live from a webpage",
+        text: "Hope it works"
+    };
+
+    mailgun.messages().send(data, function (error, body) {
+        if (error) {
+            callback(null, {
+                statusCode: error.statusCode
+            })
+        } else {
+            callback(null, {
+                statusCode: 200
+            })
+        }
     })
+
 }
