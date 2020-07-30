@@ -21,3 +21,6 @@ To build locally:
 To run locally:
 
 `netlify dev`
+
+
+Note that mailgun-js is installed from GitHub, which resolves some security issues in dependencies (0.22.0 is on npm, but without those fixes).
