@@ -58,6 +58,7 @@
     "mailgun-js": "github:highlycaffeinated/mailgun-js",
     "netlify-lambda": "^2.0.1",
     "phaser": "^3.24.1",
-    "ua-parser-js": "^0.7.21"
+    "ua-parser-js": "^0.7.21",
+    "jszip": "3.5.0"
   }
 }

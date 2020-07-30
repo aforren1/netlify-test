@@ -60,7 +60,7 @@ export default class MainScene extends Phaser.Scene {
     this.input.on('pointermove', function (pointer) {
       var timestamp = window.performance.now();
       var p_time = pointer.event.timeStamp;
-      console.log(p_time, ', ', p_time - prev);
+      //console.log(p_time, ', ', p_time - prev);
       prev = p_time;
       //console.log(pointer.event.timeStamp  + ', ' + timestamp + ', ' + (pointer.event.timeStamp - timestamp));
       if (this.input.mouse.locked) {
@@ -88,5 +88,24 @@ export default class MainScene extends Phaser.Scene {
       }
     }, this);
 
+    var keyObj = this.input.keyboard.addKey('W');
+    keyObj.on('down', function (event) {
+      console.log('Key pressed');
+      let url = '/.netlify/functions/mailgun'
+      let resp = await fetch(url,
+        {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          redirect: 'follow',
+          referrerPolicy: 'no-referrer',
+          body: 'foobar'
+        });
+      console.log(resp);
+    })
   }
 }

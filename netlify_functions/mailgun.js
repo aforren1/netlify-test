@@ -7,9 +7,9 @@ const MAILGUN_URL = "https://api.mailgun.net/v3/" + MAILGUN_DOMAIN;
 
 
 exports.handler = function (event, context, callback) {
-    // if (event.httpMethod !== 'POST') {
-    //     return { statusCode: 405, body: 'Method Not Allowed' }
-    // }
+    if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, body: 'Method Not Allowed' }
+    }
     //const data = JSON.parse(event.body)
     console.log('Sending email.')
 
@@ -17,7 +17,7 @@ exports.handler = function (event, context, callback) {
         from: "Alex 'Mailgun' Forrence <mailgun@" + MAILGUN_DOMAIN + ">",
         to: "actlab@yale.edu",
         subject: "Coming to you live from a webpage",
-        text: "Hope it works"
+        text: JSON.parse(event.body)
     };
 
     mailgun.messages().send(data, function (error, body) {
