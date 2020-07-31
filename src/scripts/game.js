@@ -10,11 +10,11 @@ export const config = {
   scale: {
     parent: 'phaser-game',
     mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
     width: screen.height,
-    height: screen.height
+    height: screen.height,
   },
-  scene: [PreloadScene, MainScene]
+  scene: [PreloadScene, MainScene],
 }
 
 window.addEventListener('load', () => {
