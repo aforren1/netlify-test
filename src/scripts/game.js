@@ -1,5 +1,6 @@
 import 'phaser' // TODO: split phaser imports up to let those trees shake
 import '@babel/polyfill'
+import 'isomorphic-fetch'
 
 import MainScene from './scenes/mainScene'
 import PreloadScene from './scenes/preloadScene'

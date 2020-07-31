@@ -92,7 +92,7 @@ export default class MainScene extends Phaser.Scene {
     keyObj.on('down', function (event) {
       console.log('Key pressed');
       let url = '/.netlify/functions/mailgun'
-      let resp = await fetch(url,
+      fetch(url,
         {
           method: 'POST',
           mode: 'cors',
@@ -103,9 +103,20 @@ export default class MainScene extends Phaser.Scene {
           },
           redirect: 'follow',
           referrerPolicy: 'no-referrer',
-          body: 'foobar'
+          body: JSON.stringify({ 'data': [1, 2, 3], 'logs': { 'a': 2 } })
+        }).then(
+          function (response) {
+            if (response.status !== 200) {
+              console.log('There was an issue: ' + response.status);
+              return;
+            } else {
+              console.log('No issues ;)');
+              return;
+            }
+          }
+        ).catch(function (err) {
+          console.log('Fetch err:', err);
         });
-      console.log(resp);
     })
   }
 }

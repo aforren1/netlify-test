@@ -3,7 +3,7 @@ const merge = require('webpack-merge')
 const common = require('./webpack.common')
 const JavaScriptObfuscator = require('webpack-obfuscator')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
+const UglifyPlugin = require('uglifyjs-webpack-plugin')
 
 const prod = {
   mode: 'production',
@@ -14,14 +14,22 @@ const prod = {
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserPlugin({
-        terserOptions: {
+      new UglifyPlugin({
+        uglifyOptions: {
           output: {
             comments: false,
           },
+          warnings: false,
+          parse: {},
+          compress: {},
+          mangle: true, // Note `mangle.properties` is `false` by default.
+          output: null,
+          toplevel: false,
+          nameCache: null,
+          ie8: false,
+          keep_fnames: false,
         },
-        extractComments: false,
-      }),
+      })
     ],
     splitChunks: {
       cacheGroups: {
