@@ -1,3 +1,4 @@
+import { postData } from '../utils/comms'
 
 export default class MainScene extends Phaser.Scene {
 
@@ -91,32 +92,9 @@ export default class MainScene extends Phaser.Scene {
     var keyObj = this.input.keyboard.addKey('W');
     keyObj.on('down', function (event) {
       console.log('Key pressed');
-      let url = '/.netlify/functions/mailgun'
-      fetch(url,
-        {
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
-          credentials: 'same-origin',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          redirect: 'follow',
-          referrerPolicy: 'no-referrer',
-          body: JSON.stringify({ 'data': [1, 2, 3], 'logs': { 'a': 2 } })
-        }).then(
-          function (response) {
-            if (response.status !== 200) {
-              console.log('There was an issue: ' + response.status);
-              return;
-            } else {
-              console.log('No issues ;)');
-              return;
-            }
-          }
-        ).catch(function (err) {
-          console.log('Fetch err:', err);
-        });
+      var data = { 'foo': [2, 3, 4], 'bar': { 'a': [100, 200] } };
+      let codes = postData(data);
+      console.log(codes);
     })
   }
 }
