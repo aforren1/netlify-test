@@ -21,5 +21,18 @@ export default class InstructionScene extends Phaser.Scene {
     this.add.sprite(center - 150, center, 'chest', 0).setOrigin(0.5, 0.5)
     this.add.sprite(center, center, 'chest', 1).setOrigin(0.5, 0.5)
     this.add.sprite(center + 150, center, 'chest', 2).setOrigin(0.5, 0.5)
+
+    let emitter = this.add.particles('coin').createEmitter({
+      frame: { frames: [0, 1, 2, 3, 4, 5], cycle: true },
+      x: center,
+      y: center - 300,
+      speed: { min: 300, max: 450 },
+      angle: { min: 0, max: 360 },
+      frequency: 30,
+      lifespan: 500,
+      gravityY: 800,
+      alpha: { start: 1, end: 0 },
+      scale: 0.5,
+    })
   }
 }
