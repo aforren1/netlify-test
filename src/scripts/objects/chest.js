@@ -55,12 +55,16 @@ export class Chest extends Phaser.GameObjects.Container {
   prime(reward) {
     let cb = (p) => {
       this.shaker.shake()
-      this.removeInteractive()
+      this.disable()
     }
     this.reward = reward
     let key = this.scene.input.keyboard.addKey(this.letter)
     this.setInteractive(new Phaser.Geom.Rectangle(-110, -110, 220, 220), Phaser.Geom.Rectangle.Contains)
     key.once('down', cb)
     this.once('pointerdown', cb)
+  }
+  disable() {
+    this.removeInteractive()
+    this.scene.input.keyboard.removeKey(this.letter)
   }
 }
