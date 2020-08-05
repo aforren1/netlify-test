@@ -26,6 +26,7 @@
     <style>
       html,
       body {
+          background-color: #333333;
           margin: 0px;
           padding: 0px;
           overflow: hidden;
@@ -34,12 +35,20 @@
       .tabContent {
       display:none;
       }
+      @font-face {
+        font-family: title_font;
+        src: url('assets/fonts/The_Abandoned_Treasure.ttf');
+        font-weight:400;
+        font-size: 160;
+        font-weight:normal;
+      }
     </style>
 
     <noscript>Please enable javascript to continue using this application.</noscript>
 
   </head>
   <body>
+    <div style="font-family:title_font; visibility: hidden;">.</div>
     <div id="phaser-game"></div>
   </body>
 </html>

@@ -104,8 +104,7 @@ export default class MainScene extends Phaser.Scene {
     keyObj.on('down', function (event) {
       console.log('Key pressed')
       var data = { data: Array.from(Array(5000).keys()), logs: { a: [100, 200] } }
-      let codes = postData(data)
-      console.log(codes)
+      Promise.all(postData(data)).then((r) => console.log(r))
     })
   }
 }

@@ -1,19 +1,16 @@
 const { google } = require('googleapis')
 const JSZip = require('jszip')
 
-const GOOGLE_DRIVE_JSON = JSON.parse(process.env.GOOGLE_DRIVE_JSON)
+const GOOGLE_JSON = JSON.parse(process.env.GOOGLE_DRIVE_JSON)
 const FOLDER_ID = '1oRsAXm-gCwDWFefxOkTc8eOLpx8RzIZG'
 
 async function sendFile(buf2) {
   const client = await google.auth.getClient({
-    credentials: GOOGLE_DRIVE_JSON,
-    scopes: 'https://www.googleapis.com/auth/drive.file',
+    credentials: GOOGLE_JSON,
+    scopes: ['https://www.googleapis.com/auth/drive.file'],
   })
-
-  const drive = google.drive({
-    version: 'v3',
-    auth: client,
-  })
+  // send to drive
+  const drive = google.drive({ version: 'v3', auth: client })
 
   await drive.files.create({
     requestBody: {
@@ -33,7 +30,7 @@ exports.handler = function (event, context, callback) {
     return { statusCode: 405, body: 'Method not allowed' }
   }
 
-  console.log('Sending drive')
+  console.log('Sending to drive')
   const data_in = JSON.parse(event.body)
   let zip = new JSZip()
 

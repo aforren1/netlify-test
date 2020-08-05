@@ -5,10 +5,16 @@ export default class PreloadScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('red', 'assets/img/red.png')
+    this.load.image('background', 'assets/img/background.png')
+    this.load.spritesheet('coin', 'assets/img/coin_sprite.png', { frameWidth: 64, frameHeight: 64 })
+    this.load.spritesheet('chest', 'assets/img/chest_sprite.png', { frameWidth: 220, frameHeight: 220 })
   }
 
   create() {
-    this.scene.start('MainScene')
+    let height = this.game.config.height
+    let center = height / 2
+    let scale_factor = height / 512 // we know the size of the image a priori
+    this.add.image(center, center, 'background').setOrigin(0.5, 0.5).setScale(scale_factor)
+    this.scene.launch('TitleScene')
   }
 }
