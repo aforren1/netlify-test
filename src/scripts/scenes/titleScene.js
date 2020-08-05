@@ -14,7 +14,7 @@ export default class TitleScene extends Phaser.Scene {
         fontSize: 160,
         color: '#D2B48C',
         stroke: '#000',
-        strokeThickness: 3,
+        strokeThickness: 2,
         align: 'center',
         padding: {
           x: 64,
@@ -61,7 +61,6 @@ export default class TitleScene extends Phaser.Scene {
     let cb = () => {
       log.info('Starting instruction scene.')
       txt.removeInteractive()
-      this.input.keyboard.removeKey('ENTER')
       this.tweens.addCounter({
         from: 255,
         to: 0,
@@ -74,7 +73,7 @@ export default class TitleScene extends Phaser.Scene {
       })
     }
     let enterKey = this.input.keyboard.addKey('ENTER')
-    enterKey.on('down', cb)
+    enterKey.once('down', cb)
     txt.once('pointerdown', cb)
   }
 }
