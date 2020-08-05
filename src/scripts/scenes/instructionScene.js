@@ -16,23 +16,39 @@ export default class InstructionScene extends Phaser.Scene {
       },
     })
     let center = this.game.config.height / 2
-    this.add.text(center, center, 'Foooo')
     let cont = new ContinueButton(this, center, center - 100)
-    this.add.sprite(center - 150, center, 'chest', 0).setOrigin(0.5, 0.5)
+    // todo: use rexshakepositionplugin for selection effect
+    let foo = this.add.sprite(center - 300, center, 'chest', 0).setOrigin(0.5, 0.5)
     this.add.sprite(center, center, 'chest', 1).setOrigin(0.5, 0.5)
-    this.add.sprite(center + 150, center, 'chest', 2).setOrigin(0.5, 0.5)
+    this.add.sprite(center + 300, center, 'chest', 2).setOrigin(0.5, 0.5)
 
     let emitter = this.add.particles('coin').createEmitter({
-      frame: { frames: [0, 1, 2, 3, 4, 5], cycle: true },
-      x: center,
-      y: center - 300,
-      speed: { min: 300, max: 450 },
+      frame: { frames: [0, 1, 2, 3, 4, 5], cycle: false },
+      x: center - 300,
+      y: center - 20,
+      speed: { min: -450, max: 450 },
       angle: { min: 0, max: 360 },
       frequency: 30,
-      lifespan: 500,
+      lifespan: { min: 300, max: 1000 },
       gravityY: 800,
       alpha: { start: 1, end: 0 },
       scale: 0.5,
+      active: false,
+      delay: { min: 0, max: 100 },
+    })
+
+    foo.setInteractive()
+    let shaker = this.plugins.get('rexShakePosition').add(foo, {
+      duration: 1000,
+      magnitude: 5,
+    })
+    foo.once('pointerdown', (p) => {
+      shaker.shake()
+    })
+    shaker.on('complete', (gameobj, shake) => {
+      gameobj.setFrame(2)
+      emitter.active = true
+      emitter.explode(50)
     })
   }
 }

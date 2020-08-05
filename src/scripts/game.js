@@ -5,6 +5,7 @@ import log from './utils/logger'
 import 'devtools-detect'
 import UAParser from 'ua-parser-js'
 import RoundRectanglePlugin from 'phaser3-rex-plugins/plugins/roundrectangle-plugin.js'
+import ShakePositionPlugin from 'phaser3-rex-plugins/plugins/shakeposition-plugin.js'
 
 import TitleScene from './scenes/titleScene'
 import PreloadScene from './scenes/preloadScene'
@@ -24,6 +25,7 @@ const config = {
   scene: [PreloadScene, TitleScene, InstructionScene],
   plugins: {
     global: [
+      { key: 'rexShakePosition', plugin: ShakePositionPlugin, start: true },
       {
         key: 'rexRoundRectanglePlugin',
         plugin: RoundRectanglePlugin,

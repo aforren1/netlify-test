@@ -58,12 +58,13 @@
     "es6-promise": "^4.2.8",
     "googleapis": "^57.0.0",
     "isomorphic-fetch": "^2.2.1",
-    "loglevel": "^1.6.8",
     "jszip": "3.5.0",
+    "loglevel": "^1.6.8",
     "mailgun-js": "github:highlycaffeinated/mailgun-js",
+    "netlify-cli": "^2.59.0",
     "netlify-lambda": "^2.0.1",
     "phaser": "^3.24.1",
-    "ua-parser-js": "^0.7.21",
-    "phaser3-rex-plugins": "1.1.20"
+    "phaser3-rex-plugins": "1.1.20",
+    "ua-parser-js": "^0.7.21"
   }
 }
