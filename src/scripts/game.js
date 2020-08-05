@@ -13,7 +13,7 @@ import InstructionScene from './scenes/instructionScene'
 const config = {
   type: Phaser.AUTO,
   backgroundColor: '#1d1d1d',
-  resolution: window.devicePixelRatio,
+  //resolution: window.devicePixelRatio,
   scale: {
     parent: 'phaser-game',
     mode: Phaser.Scale.FIT,
