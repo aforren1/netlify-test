@@ -7,13 +7,13 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].bundle.js',
-    chunkFilename: '[name].chunk.js'
+    chunkFilename: '[name].chunk.js',
   },
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js'],
   },
   module: {
-    rules: [{ test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }]
+    rules: [{ test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }],
   },
   optimization: {
     splitChunks: {
@@ -22,16 +22,18 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
           chunks: 'all',
-          filename: '[name].bundle.js'
-        }
-      }
-    }
+          filename: '[name].bundle.js',
+        },
+      },
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({ gameName: 'ACT Web Template', template: 'src/index.html' }),
-    new CopyWebpackPlugin([
-      { from: 'src/assets', to: 'assets' },
-      { from: 'src/icons/', to: 'icons'}
-    ])
-  ]
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/assets', to: 'assets' },
+        { from: 'src/icons/', to: 'icons' },
+      ],
+    }),
+  ],
 }

@@ -1,3 +1,4 @@
+// TODO: nice textured shape behind (for easy identification of spatial change)
 export class Chest extends Phaser.GameObjects.Container {
   constructor(scene, x, y, letter) {
     let img = scene.add.sprite(0, 0, 'chest', 0).setOrigin(0.5, 0.5)
@@ -11,12 +12,13 @@ export class Chest extends Phaser.GameObjects.Container {
         align: 'center',
       })
       .setOrigin(0.5, 0.5)
-
     super(scene, x, y, [img, letter_txt])
     scene.add.existing(this)
-
+    this.scene = scene
     this.letter = letter
     this.sprite = img
+    this.jangle = scene.sound.add('jangle')
+    this.thump = scene.sound.add('thump')
     this.reset()
     this.emitter = scene.add.particles('coin').createEmitter({
       frame: { frames: [0, 1, 2, 3, 4, 5], cycle: false },
@@ -38,24 +40,38 @@ export class Chest extends Phaser.GameObjects.Container {
       magnitude: 5,
     })
     // 0 is closed, 1 is empty, 2 is full
-    this.shaker.on('complete', (gameobj, shake) => {
-      let frame = 1
-      if (this.reward) {
-        frame = 2
-        this.emitter.active = true
-        this.emitter.explode(50)
-      }
-      this.sprite.setFrame(frame)
-    })
+    this.shaker.on(
+      'complete',
+      (gameobj, shake) => {
+        let frame = 1
+        if (this.reward) {
+          frame = 2
+          this.emitter.active = true
+          this.emitter.explode(50)
+          this.jangle.play()
+        } else {
+          this.thump.play()
+        }
+        this.sprite.setFrame(frame)
+      },
+      this
+    )
   }
   reset() {
     this.reward = false
     this.sprite.setFrame(0)
+    this.disable()
   }
-  prime(reward) {
+  prime(reward, other) {
+    this.other = other
     let cb = (p) => {
+      // ugh, downTime is mouse and timeDown is keyboard
+      let time = p.downTime | p.timeDown
+      let type = p.downTime ? 'pointer' : 'keyboard'
+      this.scene.events.emit('chestdone', { value: this.letter, type: type, time: time })
       this.shaker.shake()
       this.disable()
+      this.other.disable()
     }
     this.reward = reward
     let key = this.scene.input.keyboard.addKey(this.letter)
@@ -65,6 +81,7 @@ export class Chest extends Phaser.GameObjects.Container {
   }
   disable() {
     this.removeInteractive()
+    this.removeAllListeners()
     this.scene.input.keyboard.removeKey(this.letter)
   }
 }

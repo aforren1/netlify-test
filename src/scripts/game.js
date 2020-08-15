@@ -6,6 +6,8 @@ import 'devtools-detect'
 import UAParser from 'ua-parser-js'
 import RoundRectanglePlugin from 'phaser3-rex-plugins/plugins/roundrectangle-plugin.js'
 import ShakePositionPlugin from 'phaser3-rex-plugins/plugins/shakeposition-plugin.js'
+import TextTypingPlugin from 'phaser3-rex-plugins/plugins/texttyping-plugin.js'
+import BBCodeTextPlugin from 'phaser3-rex-plugins/plugins/bbcodetext-plugin.js'
 
 import TitleScene from './scenes/titleScene'
 import PreloadScene from './scenes/preloadScene'
@@ -29,6 +31,16 @@ const config = {
       {
         key: 'rexRoundRectanglePlugin',
         plugin: RoundRectanglePlugin,
+        start: true,
+      },
+      {
+        key: 'rexTextTypingPlugin',
+        plugin: TextTypingPlugin,
+        start: true,
+      },
+      {
+        key: 'rexBBCodeTextPlugin',
+        plugin: BBCodeTextPlugin,
         start: true,
       },
     ],

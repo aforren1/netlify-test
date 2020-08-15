@@ -8,6 +8,9 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('background', 'assets/img/background.png')
     this.load.spritesheet('coin', 'assets/img/coin_sprite.png', { frameWidth: 64, frameHeight: 64 })
     this.load.spritesheet('chest', 'assets/img/chest_sprite.png', { frameWidth: 220, frameHeight: 220 })
+
+    this.load.audio('jangle', 'assets/sounds/jangle.mp3')
+    this.load.audio('thump', 'assets/sounds/thump.mp3')
   }
 
   create() {
