@@ -36,4 +36,12 @@ export class ChestGroup {
     this.left.disable()
     this.right.disable()
   }
+  setX(newX) {
+    this.left.x = newX
+    this.right.x = newX
+  }
+  setY(newY) {
+    this.left.y = newY
+    this.right.y = newY
+  }
 }

@@ -3,6 +3,10 @@ import { ChestGroup } from '../objects/chestgroup'
 import { TypingText } from '../objects/typingtext'
 import { Score } from '../objects/score'
 
+let texts = [
+  'Try to collect the most [color=yellow]treasure[/color]!\n\nSelect the treasure chest on the right side, either by clicking it or pressing the "L" key.',
+  'One chest will be more likely to contain [color=yellow]treasure[/color] than the other, but [b][i]which[/i][/b] chest that is may change over time.\n\nSelect the treasure chest on the left side to continue.',
+]
 export default class InstructionScene extends Phaser.Scene {
   constructor() {
     super({ key: 'InstructionScene' })
@@ -24,9 +28,8 @@ export default class InstructionScene extends Phaser.Scene {
 
     let score = new Score(this, center, center - 400)
 
-    let _tmptxt = `Get a [b][i][size=42][color=red]HIGH HONKING SCORE[/b][/i][/size][/color]!\nPress the [b][size=42]left[/b][/size] chest to continue.\nFOo`
     let _tmp2 = `FOOBAR`
-    let text = TypingText(this, center, center - 250, '', {
+    let text = TypingText(this, center, center - 200, '', {
       fontFamily: 'Arial',
       fontSize: '32px',
       color: '#FFF',
@@ -43,11 +46,11 @@ export default class InstructionScene extends Phaser.Scene {
       maxlines: 3,
     })
       .setOrigin(0.5, 0.5)
-      .start(_tmptxt, 100)
+      .start(texts[0], 100)
     // ChestGroup is currently just two chests
-    let foo = new ChestGroup(this, center, center, 400)
+    let foo = new ChestGroup(this, center, center + 150, 400)
     var originTime = window.performance.now()
-    foo.prime(1, 1)
+    foo.prime(0, 1)
     this.events.on('chestdone', (l) => {
       // trial start time window.performance.now()
       // timestamp is in milliseconds
@@ -65,9 +68,9 @@ export default class InstructionScene extends Phaser.Scene {
       this.time.delayedCall(1000, cb)
       this.time.delayedCall(2000, () => {
         foo.reset()
-        foo.prime(0, 1)
+        foo.prime(1, 0)
         originTime = window.performance.now()
-        text.start(_tmp2, 100)
+        text.start(texts[1], 100)
       })
     })
   }
