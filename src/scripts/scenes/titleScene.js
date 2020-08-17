@@ -55,8 +55,6 @@ export default class TitleScene extends Phaser.Scene {
       follower.startFollow({ duration: 3000, repeat: -1, ease: 'Linear', _delay: i * 300, delay: i * 300 })
       follower.anims.play('spin', false, Math.floor(Math.random() * 6))
     }
-    // let coin = this.add.sprite(center, center, 'coin')
-    // coin.anims.play('spin')
 
     let cb = () => {
       log.info('Starting instruction scene.')

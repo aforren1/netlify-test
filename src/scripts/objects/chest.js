@@ -66,9 +66,10 @@ export class Chest extends Phaser.GameObjects.Container {
     this.other = other
     let cb = (p) => {
       // ugh, downTime is mouse and timeDown is keyboard
+      // time shares timebase with window.performance.now()
       let time = p.downTime | p.timeDown
       let type = p.downTime ? 'pointer' : 'keyboard'
-      this.scene.events.emit('chestdone', { value: this.letter, type: type, time: time })
+      this.scene.events.emit('chestdone', { value: this.letter, type: type, time: time, reward: this.reward })
       this.shaker.shake()
       this.disable()
       this.other.disable()

@@ -8,8 +8,11 @@ custom font: https://stackoverflow.com/questions/51217147/how-to-use-a-local-fon
 treasure chest: https://image.freepik.com/free-vector/watercolor-opened-closed-treasure-box-collection_23-2147877105.jpg
 Used the above to convert to spritesheet, and https://www.imgonline.com.ua/eng/replace-white-background-with-transparent.php to strip background
 
+Note: mp3 is supported pretty much everywhere- https://caniuse.com/#feat=mp3
 Jangle from https://freesound.org/people/sandyrb/sounds/41381/
 Thump from https://freesound.org/people/theshaggyfreak/sounds/274934/
 
 Quick turnaround: `npm run build && netlify dev`
 More complete (rebuilds lambda functions?): `netlify build && netlify dev`
+
+TODO: pack assets? https://webpack.js.org/guides/asset-management/
