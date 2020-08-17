@@ -69,7 +69,7 @@ export class Chest extends Phaser.GameObjects.Container {
       // time shares timebase with window.performance.now()
       let time = p.downTime | p.timeDown
       let type = p.downTime ? 'pointer' : 'keyboard'
-      this.scene.events.emit('chestdone', { value: this.letter, type: type, time: time, reward: this.reward })
+      this.emit('chestdone', { value: this.letter, type: type, time: time, reward: this.reward })
       this.shaker.shake()
       this.disable()
       this.other.disable()
@@ -81,8 +81,8 @@ export class Chest extends Phaser.GameObjects.Container {
     this.once('pointerdown', cb)
   }
   disable() {
-    this.removeInteractive()
     this.removeAllListeners()
+    this.removeInteractive()
     this.scene.input.keyboard.removeKey(this.letter)
   }
 }

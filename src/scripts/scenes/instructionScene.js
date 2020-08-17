@@ -6,6 +6,8 @@ import { Score } from '../objects/score'
 let texts = [
   'Try to collect the most [color=yellow]treasure[/color]!\n\nSelect the treasure chest on the right side, either by clicking it or pressing the "L" key.',
   'One chest will be more likely to contain [color=yellow]treasure[/color] than the other, but [b][i]which[/i][/b] chest that is may change over time.\n\nSelect the treasure chest on the left side to continue.',
+  // fade in score
+  '.\n\n',
 ]
 export default class InstructionScene extends Phaser.Scene {
   constructor() {
@@ -51,7 +53,7 @@ export default class InstructionScene extends Phaser.Scene {
     let foo = new ChestGroup(this, center, center + 150, 400)
     var originTime = window.performance.now()
     foo.prime(0, 1)
-    this.events.on('chestdone', (l) => {
+    foo.on('chestdone', (l) => {
       // trial start time window.performance.now()
       // timestamp is in milliseconds
       console.log(`Scene-level for ${l.value}`)
@@ -69,6 +71,8 @@ export default class InstructionScene extends Phaser.Scene {
       this.time.delayedCall(2000, () => {
         foo.reset()
         foo.prime(1, 0)
+        // this isn't quite correct.
+        // But haven't reasoned out why yet
         originTime = window.performance.now()
         text.start(texts[1], 100)
       })
