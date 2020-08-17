@@ -15,10 +15,11 @@ import { EventEmitter } from 'eventemitter3'
 // it's good to have left/right here but not have actual chest identity
 // tied to current position
 export class ChestGroup extends EventEmitter {
-  constructor(scene, x, y, offset) {
+  constructor(scene, x, y, offset, alpha) {
     super()
-    this.left = new Chest(scene, x - offset / 2, y, 'A')
-    this.right = new Chest(scene, x + offset / 2, y, 'L')
+    this.left = new Chest(scene, x - offset / 2, y, 'A', alpha)
+    this.right = new Chest(scene, x + offset / 2, y, 'L', alpha)
+    this.offset = offset
     this.reset()
   }
   reset() {
@@ -43,11 +44,15 @@ export class ChestGroup extends EventEmitter {
     this.right.disable()
   }
   setX(newX) {
-    this.left.x = newX
-    this.right.x = newX
+    this.left.x = newX - offset / 2
+    this.right.x = newX + offset / 2
   }
   setY(newY) {
     this.left.y = newY
     this.right.y = newY
+  }
+  setAlpha(value) {
+    this.left.alpha = value
+    this.right.alpha = value
   }
 }

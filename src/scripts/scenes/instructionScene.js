@@ -6,8 +6,7 @@ import { Score } from '../objects/score'
 let texts = [
   'Try to collect the most [color=yellow]treasure[/color]!\n\nSelect the treasure chest on the right side, either by clicking it or pressing the "L" key.',
   'One chest will be more likely to contain [color=yellow]treasure[/color] than the other, but [b][i]which[/i][/b] chest that is may change over time.\n\nSelect the treasure chest on the left side to continue.',
-  // fade in score
-  '.\n\n',
+  // TODO: fill in more things (i.e. explain bonuses/some alternative if bonuses disabled)
 ]
 export default class InstructionScene extends Phaser.Scene {
   constructor() {
@@ -15,23 +14,13 @@ export default class InstructionScene extends Phaser.Scene {
   }
 
   create() {
-    // darken background slightly
-    this.tweens.addCounter({
-      from: 0,
-      to: 125,
-      duration: 1000,
-      onUpdate: (t) => {
-        let v = Math.floor(t.getValue())
-        this.cameras.main.setBackgroundColor(Phaser.Display.Color.GetColor32(0, 0, 0, v))
-      },
-    })
-
     let center = this.game.config.height / 2
 
-    let score = new Score(this, center, center - 400)
+    let score = new Score(this, center, center - 400, 0)
+    // ChestGroup is currently just two chests
+    let foo = new ChestGroup(this, center, center + 150, 400, 0)
 
-    let _tmp2 = `FOOBAR`
-    let text = TypingText(this, center, center - 200, '', {
+    let text = TypingText(this, center, center - 150, '', {
       fontFamily: 'Arial',
       fontSize: '32px',
       color: '#FFF',
@@ -46,11 +35,25 @@ export default class InstructionScene extends Phaser.Scene {
         y: 32,
       },
       maxlines: 3,
+    }).setOrigin(0.5, 0.5)
+    text.visible = false
+    // darken background slightly
+    this.tweens.addCounter({
+      from: 0,
+      to: 125,
+      duration: 1000,
+      onUpdate: (t) => {
+        let v = Math.floor(t.getValue())
+        this.cameras.main.setBackgroundColor(Phaser.Display.Color.GetColor32(0, 0, 0, v))
+        foo.setAlpha(v / 125)
+        score.setAlpha(v / 125)
+      },
+      onComplete: () => {
+        text.visible = true
+        text.start(texts[0], 100)
+      },
     })
-      .setOrigin(0.5, 0.5)
-      .start(texts[0], 100)
-    // ChestGroup is currently just two chests
-    let foo = new ChestGroup(this, center, center + 150, 400)
+
     var originTime = window.performance.now()
     foo.prime(0, 1)
     foo.on('chestdone', (l) => {

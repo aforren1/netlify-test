@@ -1,6 +1,6 @@
 // TODO: nice textured shape behind (for easy identification of spatial change)
 export class Chest extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, letter) {
+  constructor(scene, x, y, letter, alpha) {
     let img = scene.add.sprite(0, 0, 'chest', 0).setOrigin(0.5, 0.5)
     let letter_txt = scene.add
       .text(-35, 80, letter, {
@@ -13,6 +13,7 @@ export class Chest extends Phaser.GameObjects.Container {
       })
       .setOrigin(0.5, 0.5)
     super(scene, x, y, [img, letter_txt])
+    this.alpha = alpha
     scene.add.existing(this)
     this.scene = scene
     this.letter = letter

@@ -1,5 +1,5 @@
 export class Score extends Phaser.GameObjects.Container {
-  constructor(scene, x, y) {
+  constructor(scene, x, y, alpha) {
     let rect = scene.add.rexRoundRectangle(0, 0, 250, 100, 8, 0xdaa878).setOrigin(0.5, 0.5).setStrokeStyle(8, 0xfece66)
     let text = scene.add
       .text(0, 0, '0', { fontFamily: 'Arial', fontSize: 64, align: 'center', stroke: '#000', strokeThickness: 4 })
@@ -8,6 +8,7 @@ export class Score extends Phaser.GameObjects.Container {
     this.text = text
     this.rect = rect
     this.score = 0
+    this.alpha = alpha
     scene.add.existing(this)
   }
 

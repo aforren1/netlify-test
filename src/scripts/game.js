@@ -16,7 +16,6 @@ import InstructionScene from './scenes/instructionScene'
 const config = {
   type: Phaser.AUTO,
   backgroundColor: '#1d1d1d',
-  //resolution: window.devicePixelRatio,
   scale: {
     parent: 'phaser-game',
     mode: Phaser.Scale.FIT,
@@ -63,8 +62,25 @@ window.addEventListener('load', () => {
   if (localStorage.getItem('returning') !== null) {
     firstVisit = false
   }
+  let visitTimes = localStorage.getItem('visit_times')
+  if (visitTimes === null) {
+    visitTimes = [new Date()]
+  } else {
+    visitTimes = JSON.parse(visitTimes)
+    visitTimes.push(new Date())
+  }
+  localStorage.setItem('visit_times', JSON.stringify(visitTimes))
   localStorage.setItem('returning', 'y')
-  globalData.config = { width: conf.width, height: conf.height, renderer: rt, user_agent: res, first_visit: firstVisit }
+  globalData.config = {
+    width: conf.width,
+    height: conf.height,
+    renderer: rt,
+    user_agent: res,
+    first_visit: firstVisit,
+    start_date: visitTimes.slice(-1)[0],
+    start_dates: visitTimes,
+    exit_dates: localStorage.getItem('exit_times'),
+  }
   log.warn('Config:' + JSON.stringify(globalData.config, null, '  '))
   // console.log(log.toJSON())
 })
@@ -72,12 +88,27 @@ window.addEventListener('load', () => {
 // once the data is successfully sent, null this out
 // need to log this too
 window.addEventListener('beforeunload', (event) => {
+  // https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+  event.preventDefault()
   log.warn('Early termination impending?')
+  event.returnValue = ''
   return 'experiment not done yet.'
 })
 
 // if prematurely ended, shuffle logs away?
-window.addEventListener('unload', (event) => {})
+// we'll at least store a local time to get an idea if they're
+// refreshing
+window.addEventListener('unload', (event) => {
+  let store = window.localStorage
+  let exits = store.getItem('exit_times')
+  if (exits === null) {
+    exits = [new Date()]
+  } else {
+    exits = JSON.parse(exits)
+    exits.push(new Date())
+  }
+  store.setItem('exit_times', JSON.stringify(exits))
+})
 
 // breaks on IE, so dump if that's really a big deal
 // Might be able to polyfill our way out, too?
