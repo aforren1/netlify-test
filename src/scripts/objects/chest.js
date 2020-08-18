@@ -20,7 +20,7 @@ export class Chest extends Phaser.GameObjects.Container {
     this.sprite = img
     this.jangle = scene.sound.add('jangle')
     this.thump = scene.sound.add('thump')
-    this.reset()
+    //this.reset()
     this.emitter = scene.add.particles('coin').createEmitter({
       frame: { frames: [0, 1, 2, 3, 4, 5], cycle: false },
       x: x,
@@ -61,19 +61,20 @@ export class Chest extends Phaser.GameObjects.Container {
   reset() {
     this.reward = false
     this.sprite.setFrame(0)
-    this.disable()
+    // this.disable()
   }
   prime(reward, other) {
     this.other = other
     let cb = (p) => {
       // ugh, downTime is mouse and timeDown is keyboard
-      // time shares timebase with window.performance.now()
+      // time shares timebase with window.performance.now()?
+      console.log('called', this.letter)
       let time = p.downTime | p.timeDown
       let type = p.downTime ? 'pointer' : 'keyboard'
       this.emit('chestdone', { value: this.letter, type: type, time: time, reward: this.reward })
-      this.shaker.shake()
       this.disable()
       this.other.disable()
+      this.shaker.shake()
     }
     this.reward = reward
     let key = this.scene.input.keyboard.addKey(this.letter)

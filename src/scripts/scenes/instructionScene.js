@@ -2,6 +2,10 @@ import log from '../utils/logger'
 import { ChestGroup } from '../objects/chestgroup'
 import { TypingText } from '../objects/typingtext'
 import { Score } from '../objects/score'
+import { Enum } from '../utils/enum'
+
+const states = Enum(['FADE_IN', 'INSTRUCT_1', 'INSTRUCT_2', 'FADE_OUT'])
+const type_speed = 10
 
 let texts = [
   'Try to collect the most [color=yellow]treasure[/color]!\n\nSelect the treasure chest on the right side, either by clicking it or pressing the "L" key.',
@@ -11,15 +15,29 @@ let texts = [
 export default class InstructionScene extends Phaser.Scene {
   constructor() {
     super({ key: 'InstructionScene' })
+    this._state = states.FADE_IN
+    this.entering = true
+  }
+
+  set state(newState) {
+    if (this.state != newState) {
+      this.entering = true
+      this._state = newState
+    }
+  }
+
+  get state() {
+    return this._state
   }
 
   create() {
     let center = this.game.config.height / 2
 
     let score = new Score(this, center, center - 400, 0)
+    this.score = score
     // ChestGroup is currently just two chests
     let foo = new ChestGroup(this, center, center + 150, 400, 0)
-
+    this.chest = foo
     let text = TypingText(this, center, center - 150, '', {
       fontFamily: 'Arial',
       fontSize: '32px',
@@ -37,6 +55,7 @@ export default class InstructionScene extends Phaser.Scene {
       maxlines: 3,
     }).setOrigin(0.5, 0.5)
     text.visible = false
+    this.instr_text = text
     // darken background slightly
     this.tweens.addCounter({
       from: 0,
@@ -45,40 +64,99 @@ export default class InstructionScene extends Phaser.Scene {
       onUpdate: (t) => {
         let v = Math.floor(t.getValue())
         this.cameras.main.setBackgroundColor(Phaser.Display.Color.GetColor32(0, 0, 0, v))
-        foo.setAlpha(v / 125)
-        score.setAlpha(v / 125)
+        foo.alpha = v / 125
+        score.alpha = v / 125
       },
       onComplete: () => {
-        text.visible = true
-        text.start(texts[0], 100)
+        this.state = states.INSTRUCT_1
       },
     })
-
     var originTime = window.performance.now()
-    foo.prime(0, 1)
-    foo.on('chestdone', (l) => {
-      // trial start time window.performance.now()
-      // timestamp is in milliseconds
-      console.log(`Scene-level for ${l.value}`)
-      console.log(`Timestamp for event: ${l.time - originTime}`)
-      console.log(`Device: ${l.type}`)
-      console.log(`reward: ${l.reward}`)
-      // 1000ms for rumble effect, 1000ms to wait after chest opening
-      let cb = () => {}
-      if (l.reward) {
-        cb = () => {
-          score.addScore(50)
+  }
+  update() {
+    switch (this.state) {
+      case states.FADE_IN:
+        // nothing to do-- driven by tween completion
+        break
+      case states.INSTRUCT_1:
+        if (this.entering) {
+          log.info('Entering instruct_1')
+          this.entering = false
+          this.instr_text.visible = true
+          this.instr_text.start(texts[0], type_speed)
+          this.instr_text.typing.once('complete', () => {
+            this.chest.reset()
+            this.chest.prime(0, 1)
+            this.chest.once('chestdone', (l) => {
+              let cb = () => {}
+              if (l.reward) {
+                cb = () => {
+                  this.score.addScore(50)
+                }
+              } else {
+                // one attention check missed
+              }
+              this.time.delayedCall(1000, cb)
+              this.time.delayedCall(2000, () => {
+                this.state = states.INSTRUCT_2
+              })
+            })
+          })
         }
-      }
-      this.time.delayedCall(1000, cb)
-      this.time.delayedCall(2000, () => {
-        foo.reset()
-        foo.prime(1, 0)
-        // this isn't quite correct.
-        // But haven't reasoned out why yet
-        originTime = window.performance.now()
-        text.start(texts[1], 100)
-      })
-    })
+      case states.INSTRUCT_2:
+        if (this.entering) {
+          log.info('Entering instruct_2')
+          this.entering = false
+          this.instr_text.start(texts[1], type_speed)
+          this.instr_text.typing.once('complete', () => {
+            this.chest.reset()
+            this.chest.prime(1, 0)
+            this.chest.once('chestdone', (l) => {
+              let cb = () => {}
+              if (l.reward) {
+                cb = () => {
+                  this.score.addScore(50)
+                }
+              } else {
+                // one attention check missed
+              }
+              this.time.delayedCall(1000, cb)
+              this.time.delayedCall(2000, () => {
+                this.state = states.FADE_OUT
+              })
+            })
+          })
+        }
+      case states.FADE_OUT:
+        if (this.entering) {
+          log.info('Fading out instructions')
+          this.entering = false
+          this.instr_text.visible = false
+          this.chest.reset()
+          this.chest.prime(1, 1)
+          this.chest.once('chestdone', (l) => {
+            let cb = () => {}
+            if (l.reward) {
+              cb = () => {
+                this.score.addScore(50)
+              }
+            }
+            this.time.delayedCall(1000, cb)
+            this.time.delayedCall(2000, () => {
+              this.chest.reset()
+              this.chest.prime(0, 1)
+            })
+          })
+        }
+    }
   }
 }
+
+// foo.on('chestdone', (l) => {
+//   // trial start time window.performance.now()
+//   // timestamp is in milliseconds
+//   console.log(`Scene-level for ${l.value}`)
+//   console.log(`Timestamp for event: ${l.time - originTime}`)
+//   console.log(`Device: ${l.type}`)
+//   console.log(`reward: ${l.reward}`)
+// })

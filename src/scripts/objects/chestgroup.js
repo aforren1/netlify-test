@@ -43,15 +43,15 @@ export class ChestGroup extends EventEmitter {
     this.left.disable()
     this.right.disable()
   }
-  setX(newX) {
+  set x(newX) {
     this.left.x = newX - offset / 2
     this.right.x = newX + offset / 2
   }
-  setY(newY) {
+  set y(newY) {
     this.left.y = newY
     this.right.y = newY
   }
-  setAlpha(value) {
+  set alpha(value) {
     this.left.alpha = value
     this.right.alpha = value
   }

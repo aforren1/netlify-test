@@ -71,6 +71,10 @@ window.addEventListener('load', () => {
   }
   localStorage.setItem('visit_times', JSON.stringify(visitTimes))
   localStorage.setItem('returning', 'y')
+  let exitTimes = localStorage.getItem('exit_times')
+  if (exitTimes !== null) {
+    exitTimes = JSON.parse(exitTimes)
+  }
   globalData.config = {
     width: conf.width,
     height: conf.height,
@@ -79,10 +83,9 @@ window.addEventListener('load', () => {
     first_visit: firstVisit,
     start_date: visitTimes.slice(-1)[0],
     start_dates: visitTimes,
-    exit_dates: localStorage.getItem('exit_times'),
+    exit_dates: exitTimes,
   }
   log.warn('Config:' + JSON.stringify(globalData.config, null, '  '))
-  // console.log(log.toJSON())
 })
 
 // once the data is successfully sent, null this out
