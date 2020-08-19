@@ -84,8 +84,8 @@ export default class InstructionScene extends Phaser.Scene {
           this.entering = false
           this.instr_text.visible = true
           this.instr_text.start(texts[0], type_speed)
+          this.chest.reset()
           this.instr_text.typing.once('complete', () => {
-            this.chest.reset()
             this.chest.prime(0, 1)
             this.chest.once('chestdone', (l) => {
               let cb = () => {}
@@ -108,8 +108,8 @@ export default class InstructionScene extends Phaser.Scene {
           log.info('Entering instruct_2')
           this.entering = false
           this.instr_text.start(texts[1], type_speed)
+          this.chest.reset()
           this.instr_text.typing.once('complete', () => {
-            this.chest.reset()
             this.chest.prime(1, 0)
             this.chest.once('chestdone', (l) => {
               let cb = () => {}
@@ -131,21 +131,17 @@ export default class InstructionScene extends Phaser.Scene {
         if (this.entering) {
           log.info('Fading out instructions')
           this.entering = false
-          this.instr_text.visible = false
-          this.chest.reset()
-          this.chest.prime(1, 1)
-          this.chest.once('chestdone', (l) => {
-            let cb = () => {}
-            if (l.reward) {
-              cb = () => {
-                this.score.addScore(50)
-              }
-            }
-            this.time.delayedCall(1000, cb)
-            this.time.delayedCall(2000, () => {
-              this.chest.reset()
-              this.chest.prime(0, 1)
-            })
+          this.tweens.addCounter({
+            from: 255,
+            to: 0,
+            duration: 1500,
+            onUpdate: (t) => {
+              let v = Math.floor(t.getValue())
+              let tmp = Math.min(125, v)
+              this.cameras.main.setBackgroundColor(Phaser.Display.Color.GetColor32(0, 0, 0, tmp))
+              this.cameras.main.setAlpha(v / 255)
+            },
+            onComplete: () => this.scene.start('MainScene', { score: this.score.score }),
           })
         }
     }

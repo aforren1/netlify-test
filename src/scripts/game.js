@@ -12,6 +12,7 @@ import BBCodeTextPlugin from 'phaser3-rex-plugins/plugins/bbcodetext-plugin.js'
 import TitleScene from './scenes/titleScene'
 import PreloadScene from './scenes/preloadScene'
 import InstructionScene from './scenes/instructionScene'
+import MainScene from './scenes/mainScene'
 
 const config = {
   type: Phaser.AUTO,
@@ -23,7 +24,7 @@ const config = {
     width: screen.height,
     height: screen.height,
   },
-  scene: [PreloadScene, TitleScene, InstructionScene],
+  scene: [PreloadScene, TitleScene, InstructionScene, MainScene],
   plugins: {
     global: [
       { key: 'rexShakePosition', plugin: ShakePositionPlugin, start: true },
