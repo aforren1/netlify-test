@@ -13,6 +13,7 @@ import TitleScene from './scenes/titleScene'
 import PreloadScene from './scenes/preloadScene'
 import InstructionScene from './scenes/instructionScene'
 import MainScene from './scenes/mainScene'
+import EndScene from './scenes/endScene'
 
 const config = {
   type: Phaser.AUTO,
@@ -24,7 +25,7 @@ const config = {
     width: screen.height,
     height: screen.height,
   },
-  scene: [PreloadScene, TitleScene, InstructionScene, MainScene],
+  scene: [PreloadScene, TitleScene, InstructionScene, MainScene, EndScene],
   plugins: {
     global: [
       { key: 'rexShakePosition', plugin: ShakePositionPlugin, start: true },
@@ -86,18 +87,18 @@ window.addEventListener('load', () => {
     start_dates: visitTimes,
     exit_dates: exitTimes,
   }
-  log.warn('Config:' + JSON.stringify(globalData.config, null, '  '))
 })
 
 // once the data is successfully sent, null this out
 // need to log this too
-window.addEventListener('beforeunload', (event) => {
+export function onBeforeUnload(event) {
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
   event.preventDefault()
   log.warn('Early termination impending?')
   event.returnValue = ''
   return 'experiment not done yet.'
-})
+}
+window.addEventListener('beforeunload', onBeforeUnload)
 
 // if prematurely ended, shuffle logs away?
 // we'll at least store a local time to get an idea if they're

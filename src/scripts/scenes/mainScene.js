@@ -2,6 +2,9 @@ import log from '../utils/logger'
 import { ChestGroup } from '../objects/chestgroup'
 import { Score } from '../objects/score'
 import { Enum } from '../utils/enum'
+import { generateProbs } from '../utils/bandit'
+import { globalData } from '../utils/globaldata'
+import { copyObj } from '../utils/copy'
 
 const states = Enum(['FADE_IN', 'MAIN_LOOP', 'FADE_OUT'])
 
@@ -23,9 +26,33 @@ export default class MainScene extends Phaser.Scene {
     return this._state
   }
 
+  getTrialRes() {
+    let prob = this.probs[this.trial_counter]
+    let left = Math.random() < prob
+    let right = Math.random() < 1 - prob
+    return [left, right]
+  }
+
   create(data) {
+    console.log(`entering with ${data.score} points.`)
     let center = this.game.config.height / 2
-    console.log(data)
+    let gogogo = this.add
+      .text(center, center - 150, 'GO!', {
+        fontFamily: 'Arial',
+        fontSize: 80,
+        align: 'center',
+        stroke: '#000',
+        color: '#00ff7f',
+        strokeThickness: 4,
+      })
+      .setOrigin(0.5, 0.5)
+    this.tweens.add({
+      targets: gogogo,
+      alpha: { from: 1, to: 0 },
+      ease: 'Cubic',
+      duration: 3000,
+      repeat: 0,
+    })
     let score = new Score(this, center, center - 400, 0)
     score.addScore(data.score)
     this.score = score
@@ -39,5 +66,65 @@ export default class MainScene extends Phaser.Scene {
         this.state = states.MAIN_LOOP
       },
     })
+    this.probs = generateProbs()
+    globalData.trials = Array()
+    this.trial_counter = 0
+  }
+  update() {
+    switch (this.state) {
+      case states.FADE_IN:
+        break
+      case states.MAIN_LOOP:
+        if (this.entering) {
+          log.info(`trial ${this.trial_counter}`)
+          this.entering = false
+          this.chest.reset()
+          this.trial_data = {
+            trial: this.trial_counter,
+            probs: [this.probs[this.trial_counter], 1 - this.probs[this.trial_counter]],
+            outcomes: this.getTrialRes(),
+          }
+
+          this.chest.prime(...this.trial_data.outcomes)
+          this.trial_reference_time = window.performance.now()
+
+          this.chest.once('chestdone', (l) => {
+            let cb = () => {}
+            if (l.reward) {
+              cb = () => {
+                this.score.addScore(50)
+              }
+            }
+            this.trial_data.chest = l.value
+            this.trial_data.reference_time = this.trial_reference_time
+            this.trial_data.rt = l.time - this.trial_reference_time
+            this.trial_data.input_type = l.type
+            this.trial_data.reward = l.reward
+            // store trial data (make a copy)
+            console.log(this.trial_data)
+            globalData.trials.push(copyObj(this.trial_data))
+            this.time.delayedCall(1000, cb)
+            this.time.delayedCall(2000, () => {
+              this.entering = true
+              this.trial_counter += 1
+              if (this.trial_counter >= this.probs.length) {
+                this.state = states.FADE_OUT
+              }
+            })
+          })
+        }
+        break
+      case states.FADE_OUT:
+        // save data
+        if (this.entering) {
+          this.entering = false
+          log.info(`Final score: ${this.score.score}`)
+          globalData.logs = log.msgs
+          console.log(globalData)
+          // fade out
+          this.scene.start('EndScene')
+        }
+        break
+    }
   }
 }

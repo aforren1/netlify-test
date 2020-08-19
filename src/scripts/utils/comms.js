@@ -32,7 +32,8 @@ function postMailgun(data) {
 }
 
 function postDrive(data) {
-  return _postData(data, '/.netlify/functions/drive')
+  return 0
+  //return _postData(data, '/.netlify/functions/drive')
 }
 
 export function postData(data) {

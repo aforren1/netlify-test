@@ -1,15 +1,14 @@
 const API_KEY = process.env.MAILGUN_API_KEY
 const DOMAIN = process.env.MAILGUN_DOMAIN
 const mailgun = require('mailgun-js')({ apiKey: API_KEY, domain: DOMAIN })
-const JSZip = require('jszip')
 
-function sendMailgun(buf2, callback) {
-  let buf = new Buffer.from(buf2)
+function sendMailgun(buf2, id, callback) {
+  let buf = new Buffer.from(buf2, 'utf8')
 
   var attach = new mailgun.Attachment({
     data: buf,
-    filename: 'data.zip',
-    contentType: 'application/zip',
+    filename: `data${id}.json`,
+    contentType: 'application/json',
     knownLength: buf.length,
   })
 
@@ -39,20 +38,7 @@ exports.handler = function (event, context, callback) {
     return { statusCode: 405, body: 'Method Not Allowed' }
   }
   const data_in = JSON.parse(event.body)
-  let zip = new JSZip()
-
-  zip.file('data.json', JSON.stringify(data_in['data']))
-  zip.file('log.json', JSON.stringify(data_in['logs']))
 
   console.log('Sending email.')
-  let sf = (v) => sendMailgun(v, callback)
-  zip
-    .generateAsync({
-      type: 'arraybuffer',
-      compression: 'DEFLATE',
-      compressionOptions: {
-        level: 6,
-      },
-    })
-    .then(sf)
+  sendMailgun(event.body, '12345', callback)
 }
