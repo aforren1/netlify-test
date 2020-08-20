@@ -4,6 +4,7 @@ import '@babel/polyfill'
 import log from './utils/logger'
 import 'devtools-detect'
 import UAParser from 'ua-parser-js'
+
 import RoundRectanglePlugin from 'phaser3-rex-plugins/plugins/roundrectangle-plugin.js'
 import ShakePositionPlugin from 'phaser3-rex-plugins/plugins/shakeposition-plugin.js'
 import TextTypingPlugin from 'phaser3-rex-plugins/plugins/texttyping-plugin.js'
@@ -15,6 +16,7 @@ import InstructionScene from './scenes/instructionScene'
 import MainScene from './scenes/mainScene'
 import EndScene from './scenes/endScene'
 
+let small_dim = Math.min(screen.width, screen.height)
 const config = {
   type: Phaser.AUTO,
   backgroundColor: '#1d1d1d',
@@ -22,8 +24,8 @@ const config = {
     parent: 'phaser-game',
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: screen.height,
-    height: screen.height,
+    width: small_dim,
+    height: small_dim,
   },
   scene: [PreloadScene, TitleScene, InstructionScene, MainScene, EndScene],
   plugins: {
@@ -49,6 +51,7 @@ const config = {
 }
 
 window.addEventListener('load', () => {
+  // fixed seed for everyone
   const game = new Phaser.Game(config)
   log.info('Phaser loaded.')
   let conf = game.config

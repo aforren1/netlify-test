@@ -27,18 +27,19 @@ plot(prob_sched / 2 + 0.5);
 */
 
 // https://github.com/aforren1/2dof-tracking/blob/master/helpers.py#L21
+
 export function generateProbs() {
   // using primes,
   // 1 Hz = nTrials (1 cycle)
   // 2 Hz = nTrials/2
   // 3 Hz = nTrials/3
   // ...
-  const freqs = [2, 3, 5, 11]
+  const freqs = [2, 3, 5, 11, 17]
   //const trials = freqs.reduce((a, b) => a * b)
   const trials = 10
   //const baseAmp = 0.889 // max possible amplitude *just* shy of 1
   //const amps = freqs.map((x) => baseAmp / x)
-  const amps = [0.25, 0.25, 0.25, 0.25]
+  const amps = [0.2, 0.2, 0.2, 0.2, 0.2]
   // TODO: set with something seedable!
   // e.g. https://github.com/davidbau/seedrandom
   const phases = [...Array(freqs.length)].map((_, i) => Math.random() * 2 * Math.PI)

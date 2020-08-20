@@ -64,7 +64,7 @@
     "netlify-cli": "^2.59.1",
     "netlify-lambda": "^2.0.1",
     "phaser": "^3.24.1",
-    "phaser3-rex-plugins": "1.1.20",
+    "phaser3-rex-plugins": "^1.1.20",
     "ua-parser-js": "^0.7.21"
   }
 }
