@@ -16,7 +16,8 @@ import InstructionScene from './scenes/instructionScene'
 import MainScene from './scenes/mainScene'
 import EndScene from './scenes/endScene'
 
-let small_dim = Math.min(screen.width, screen.height)
+//let small_dim = Math.min(screen.width, screen.height)
+let small_dim = 1000
 const config = {
   type: Phaser.AUTO,
   backgroundColor: '#1d1d1d',
