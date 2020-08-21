@@ -7,7 +7,7 @@ function sendMailgun(buf2, id, callback) {
 
   var attach = new mailgun.Attachment({
     data: buf,
-    filename: `data${id}.json`,
+    filename: `data_${id}.json`,
     contentType: 'application/json',
     knownLength: buf.length,
   })
@@ -15,7 +15,7 @@ function sendMailgun(buf2, id, callback) {
   let data = {
     from: "Alex 'Mailgun' Forrence <mailgun@" + DOMAIN + '>',
     to: 'actlab@yale.edu',
-    subject: 'Coming to you live from a webpage',
+    subject: `Fresh data from ${id}`,
     text: 'see attached',
     attachment: attach,
   }
@@ -39,6 +39,5 @@ exports.handler = function (event, context, callback) {
   }
   const data_in = JSON.parse(event.body)
 
-  console.log('Sending email.')
-  sendMailgun(event.body, '12345', callback)
+  sendMailgun(event.body, data_in['config']['id'], callback)
 }

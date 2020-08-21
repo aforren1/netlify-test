@@ -2,17 +2,16 @@
 export class Chest extends Phaser.GameObjects.Container {
   constructor(scene, x, y, letter, alpha) {
     let img = scene.add.sprite(0, 0, 'chest', 0).setOrigin(0.5, 0.5)
+    let box = scene.add.rectangle(-35, 80, 80, 80, '#999999', 0.7).setStrokeStyle(2, '#000000')
     let letter_txt = scene.add
       .text(-35, 80, letter, {
         fontFamily: 'Arial',
         fontSize: 80,
         color: '#FFF',
-        stroke: '#000',
-        strokeThickness: 4,
         align: 'center',
       })
       .setOrigin(0.5, 0.5)
-    super(scene, x, y, [img, letter_txt])
+    super(scene, x, y, [img, box, letter_txt])
     this.alpha = alpha
     scene.add.existing(this)
     this.scene = scene
@@ -65,18 +64,28 @@ export class Chest extends Phaser.GameObjects.Container {
   }
   prime(reward, other) {
     this.other = other
+    let key = this.scene.input.keyboard.addKey(this.letter)
     let cb = (p) => {
       // ugh, downTime is mouse and timeDown is keyboard
       // time shares timebase with window.performance.now()?
       let time = p.downTime | p.timeDown
-      let type = p.downTime ? 'pointer' : 'keyboard'
+      let type = p.downTime ? 'touch' : 'keyboard'
+      if (type === 'keyboard' && p.originalEvent.repeat) {
+        // reschedule
+        key.once('down', cb)
+        return
+      }
+      if (type === 'touch') {
+        if (!p.wasTouch) {
+          type = 'mouse'
+        }
+      }
       this.emit('chestdone', { value: this.letter, type: type, time: time, reward: this.reward })
       this.disable()
       this.other.disable()
       this.shaker.shake()
     }
     this.reward = reward
-    let key = this.scene.input.keyboard.addKey(this.letter)
     this.setInteractive(new Phaser.Geom.Rectangle(-110, -110, 220, 220), Phaser.Geom.Rectangle.Contains)
     key.once('down', cb)
     this.once('pointerdown', cb)

@@ -30,8 +30,8 @@ export default class EndScene extends Phaser.Scene {
       .setOrigin(0.5, 0.5)
     window.removeEventListener('beforeunload', onBeforeUnload)
     log.info('onBeforeUnload removed.')
+    console.log(postData(globalData))
     // TODO: validate data in postData
     // TODO: handle successful/unsuccessful post
-    console.log(postData(globalData))
   }
 }

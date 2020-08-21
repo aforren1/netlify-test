@@ -81,7 +81,17 @@ window.addEventListener('load', () => {
   if (exitTimes !== null) {
     exitTimes = JSON.parse(exitTimes)
   }
+  const url_params = new URL(window.location.href).searchParams
+  const randomString = (length) => [...Array(length)].map(() => (~~(Math.random() * 36)).toString(36)).join('')
+  let id = url_params.get('PROLIFIC_PID') || randomString(10)
   globalData.config = {
+    id: id,
+    // if not on prolific, might be all null
+    prolific_config: {
+      prolific_pid: url_params.get('PROLIFIC_PID'),
+      study_id: url_params.get('STUDY_ID'),
+      session_id: url_params.get('SESSION_ID'),
+    },
     width: conf.width,
     height: conf.height,
     renderer: rt,

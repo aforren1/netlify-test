@@ -71,7 +71,6 @@ export default class InstructionScene extends Phaser.Scene {
         this.state = states.INSTRUCT_1
       },
     })
-    var originTime = window.performance.now()
   }
   update() {
     switch (this.state) {

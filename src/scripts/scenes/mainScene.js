@@ -34,7 +34,6 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create(data) {
-    console.log(`entering with ${data.score} points.`)
     let center = this.game.config.height / 2
     let gogogo = this.add
       .text(center, center - 150, 'GO!', {
@@ -101,7 +100,6 @@ export default class MainScene extends Phaser.Scene {
             this.trial_data.input_type = l.type
             this.trial_data.reward = l.reward
             // store trial data (make a copy)
-            console.log(this.trial_data)
             globalData.trials.push(copyObj(this.trial_data))
             this.time.delayedCall(1000, cb)
             this.time.delayedCall(2000, () => {
@@ -120,7 +118,6 @@ export default class MainScene extends Phaser.Scene {
           this.entering = false
           log.info(`Final score: ${this.score.score}`)
           globalData.logs = log.msgs
-          console.log(globalData)
           // fade out
           this.scene.start('EndScene')
         }
